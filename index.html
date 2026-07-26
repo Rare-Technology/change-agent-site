@@ -179,10 +179,15 @@
   }
   .hero-illustration{
     align-self:end;
-    max-width:340px;                 /* matches the image intrinsic width — layout constant */
+    justify-self:start;
+    width:100%;                      /* fill the illustration column, not a fixed 340px */
+    max-width:100%;
+    height:auto;
     display:block;
-    /* Bleed flush to the panel's bottom edge — cancel the panel's bottom padding */
+    /* Bleed flush to the panel's bottom AND left edges — cancel the panel's padding
+       on those sides so the illustration sits hard against the blue box corner. */
     margin-bottom:calc(var(--hero-panel-pad) * -1);
+    margin-left:calc(var(--hero-panel-pad) * -1);
   }
 
   /* Chat card bleeds flush to the panel's bottom edge, cut off by it:
@@ -576,12 +581,12 @@
           Use proven science to change behavior for the better.
         </h1>
         <img class="hero-illustration"
-             src="assets/hero-woman-340.webp"
-             srcset="assets/hero-woman-340.webp 340w, assets/hero-woman-680.webp 680w"
-             sizes="340px"
-             width="340" height="274"
+             src="assets/hero-bicycle-680.webp"
+             srcset="assets/hero-bicycle-340.webp 340w, assets/hero-bicycle-680.webp 680w, assets/hero-bicycle-1020.webp 1020w"
+             sizes="(min-width:1364px) 410px, (min-width:1080px) 30vw, 340px"
+             width="340" height="264"
              loading="lazy" decoding="async"
-             alt="Illustration of a woman working on a laptop at a desk" />
+             alt="Illustration of a person riding a bicycle beside a forward-pointing arrow" />
 
         <!-- Two-tone chat panel: non-scrolling frame + inner scroller + hover scroll hint -->
         <div class="chat-preview">
