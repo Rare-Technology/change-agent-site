@@ -415,12 +415,22 @@
     overflow:hidden; /* clip the flush bottom-left reveal image to the rounded corner */
     transition:background var(--rare-motion-duration-fast) var(--rare-motion-easing-standard);
   }
-  /* Rollover: each card fills with a distinct muted secondary-accent surface.
-     Tints are light enough that the default ink/muted text keeps AA contrast. */
-  .case-card:nth-child(1):hover{background:var(--ca-card-fill-1)}
-  .case-card:nth-child(2):hover{background:var(--ca-card-fill-2)}
-  .case-card:nth-child(3):hover{background:var(--ca-card-fill-3)}
-  .case-card:nth-child(4):hover{background:var(--ca-card-fill-4)}
+  /* Each card's rollover pair: a distinct muted secondary-accent fill, and the
+     matching dark accent ink for the reveal copy. Tints are light enough that
+     the default ink/muted text keeps AA contrast. */
+  .case-card:nth-child(1){--case-fill:var(--ca-card-fill-1);--case-ink:var(--ca-card-ink-1)}
+  .case-card:nth-child(2){--case-fill:var(--ca-card-fill-2);--case-ink:var(--ca-card-ink-2)}
+  .case-card:nth-child(3){--case-fill:var(--ca-card-fill-3);--case-ink:var(--ca-card-ink-3)}
+  .case-card:nth-child(4){--case-fill:var(--ca-card-fill-4);--case-ink:var(--ca-card-ink-4)}
+  /* Active state = rollover (hover-capable pointers only, so touch browsers'
+     sticky :hover can't strand a card on), tap (.is-active, set by §4 script)
+     or keyboard focus. */
+  .case-card:is(.is-active, :focus-visible){background:var(--case-fill)}
+  @media (hover:hover){ .case-card:hover{background:var(--case-fill)} }
+  .case-card:focus-visible{
+    outline:var(--rare-border-width-focus) solid var(--rare-color-focus-ring);
+    outline-offset:var(--rare-border-offset-focus);
+  }
   /* Last card snaps by its END edge so the forward scroll stops with the card's
      right edge aligned to the container content edge — i.e. the right edge of the
      rightmost nav arrow below. Also makes the end reachable under mandatory snap,
@@ -442,31 +452,32 @@
     opacity:0;
     transition:opacity var(--rare-motion-duration-fast) var(--rare-motion-easing-standard);
   }
-  .case-card:nth-child(1) .case-reveal{color:var(--ca-card-ink-1)}
-  .case-card:nth-child(2) .case-reveal{color:var(--ca-card-ink-2)}
-  .case-card:nth-child(3) .case-reveal{color:var(--ca-card-ink-3)}
-  .case-card:nth-child(4) .case-reveal{color:var(--ca-card-ink-4)}
-  .case-card:hover .case-reveal{opacity:1}
-  /* Rollover illustration: fades in flush to the card's bottom-left corner
-     (ignores the card padding) and sits behind the text. Decorative. */
+  .case-reveal{color:var(--case-ink)}
+  .case-card:is(.is-active, :focus-visible) .case-reveal{opacity:1}
+  @media (hover:hover){ .case-card:hover .case-reveal{opacity:1} }
+  /* Card illustration: sits flush to the card's bottom-left corner (ignores the
+     card padding) behind the text. Decorative. At rest it shows as a light
+     grayscale ghost; when the card is active it transitions to full color. */
   .case-media{
     position:absolute;
     left:0;
     bottom:0;
-    /* Sized to clear the longest reveal copy on the smallest still-shown card
-       (~267px at the 1025px breakpoint); larger cards get more clearance. */
-    width:40%;
+    /* 40% of the card on wide cards, shrinking faster than the card as it
+       narrows so the image always clears the longest reveal copy (whose line
+       wraps hold steady under its 26ch cap): ~60px wide on the 240px floor
+       card, reaching the 40% cap at ~266px. Tied to case-card.width. */
+    width:min(40%, calc((var(--rare-case-card-width) - 240px) * 1.75 + 60px));
     height:auto;
-    opacity:0;
+    filter:grayscale(1);
+    opacity:.4;
     z-index:var(--rare-elevation-z-base);
     pointer-events:none;
-    transition:opacity var(--rare-motion-duration-fast) var(--rare-motion-easing-standard);
+    transition:
+      opacity var(--rare-motion-duration-fast) var(--rare-motion-easing-standard),
+      filter var(--rare-motion-duration-fast) var(--rare-motion-easing-standard);
   }
-  .case-card:hover .case-media{opacity:1}
-  /* Below the wide breakpoint the cards hit their 240px floor, where the reveal
-     text fills the card and would collide with the image — so drop the image and
-     let the text stand alone. (display:none also skips the lazy fetch.) */
-  @media (max-width:1024px){ .case-media{display:none} }
+  .case-card:is(.is-active, :focus-visible) .case-media{filter:none;opacity:1}
+  @media (hover:hover){ .case-card:hover .case-media{filter:none;opacity:1} }
   /* Keep text above the illustration. */
   .case-card > :where(.case-title, .case-desc, .case-reveal){position:relative;z-index:var(--rare-elevation-z-raised)}
 
@@ -772,25 +783,25 @@
 
       <div class="cases-viewport">
         <ul class="cases-track" id="cases-track" role="list">
-          <li class="case-card">
+          <li class="case-card" tabindex="0">
             <h3 class="case-title">Idea Hunt</h3>
             <p class="case-desc">Find the breakthrough ideas drawn from across sectors.</p>
             <p class="case-reveal">You’re familiar with approaches in your field, so the game changing idea might be electrification, personal finance, healthcare, or advocacy.</p>
             <img class="case-media" src="assets/case-card-idea-hunt.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" />
           </li>
-          <li class="case-card">
+          <li class="case-card" tabindex="0">
             <h3 class="case-title">Intervention Critique</h3>
             <p class="case-desc">Improve your design so your next steps have impact.</p>
             <p class="case-reveal">A complementary idea fitting your audience and resources might overcome the obstacles that hold back change.</p>
             <img class="case-media" src="assets/case-card-intervention-critique.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" />
           </li>
-          <li class="case-card">
+          <li class="case-card" tabindex="0">
             <h3 class="case-title">Workshop Anchor</h3>
             <p class="case-desc">Keep your team's design decisions grounded in evidence.</p>
             <p class="case-reveal">Generate a stream of ideas while staying grounded in behavioral science.</p>
             <img class="case-media" src="assets/case-card-workshop-anchor.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" />
           </li>
-          <li class="case-card">
+          <li class="case-card" tabindex="0">
             <h3 class="case-title">The Kickoff</h3>
             <p class="case-desc">Start a new project with a shared, evidence-based footing.</p>
             <p class="case-reveal">Amass research and evidence-based intervention concepts that address the behavior change challenges you face.</p>
@@ -1020,6 +1031,28 @@
     window.addEventListener("resize", update);
 
     update();
+  })();
+
+  /* ---------------------------------------------------------
+     §4 USE-CASE CARDS — tap to activate. Touch browsers don't reliably
+     apply :hover to non-interactive elements, so a tap toggles .is-active
+     (one card at a time); tapping elsewhere clears it. Mouse clicks are
+     ignored, since the hover rollover already covers them.
+     --------------------------------------------------------- */
+  (function caseTap(){
+    var cards = Array.prototype.slice.call(document.querySelectorAll(".case-card"));
+    if(!cards.length) return;
+
+    var pointerType = "mouse";
+    document.addEventListener("pointerdown", function(e){ pointerType = e.pointerType; }, {passive:true});
+
+    document.addEventListener("click", function(e){
+      if(pointerType === "mouse") return;
+      var hit = e.target.closest ? e.target.closest(".case-card") : null;
+      cards.forEach(function(card){
+        card.classList.toggle("is-active", card === hit && !card.classList.contains("is-active"));
+      });
+    });
   })();
 
   /* ---------------------------------------------------------
