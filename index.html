@@ -462,11 +462,11 @@
     position:absolute;
     left:0;
     bottom:0;
-    /* 40% of the card on wide cards, shrinking faster than the card as it
-       narrows so the image always clears the longest reveal copy (whose line
-       wraps hold steady under its 26ch cap): ~60px wide on the 240px floor
-       card, reaching the 40% cap at ~266px. Tied to case-card.width. */
-    width:min(40%, calc((var(--rare-case-card-width) - 240px) * 1.75 + 60px));
+    /* Half the card at every size (~120px on the 240px floor card). Fits
+       because each card's desc + reveal copy is capped at 5 lines on the floor
+       card (2-line desc → ≤3-line reveal; 3-line desc → ≤2-line reveal),
+       which leaves ~30px clear above the image. Longer copy will collide. */
+    width:50%;
     height:auto;
     filter:grayscale(1);
     opacity:.4;
@@ -786,25 +786,25 @@
           <li class="case-card" tabindex="0">
             <h3 class="case-title">Idea Hunt</h3>
             <p class="case-desc">Find the breakthrough ideas drawn from across sectors.</p>
-            <p class="case-reveal">You’re familiar with approaches in your field, so the game changing idea might be electrification, personal finance, healthcare, or advocacy.</p>
+            <p class="case-reveal">The game-changer might come from energy, finance, or health.</p>
             <img class="case-media" src="assets/case-card-idea-hunt.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" />
           </li>
           <li class="case-card" tabindex="0">
             <h3 class="case-title">Intervention Critique</h3>
             <p class="case-desc">Improve your design so your next steps have impact.</p>
-            <p class="case-reveal">A complementary idea fitting your audience and resources might overcome the obstacles that hold back change.</p>
+            <p class="case-reveal">Find the missing piece that clears the obstacles to change.</p>
             <img class="case-media" src="assets/case-card-intervention-critique.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" />
           </li>
           <li class="case-card" tabindex="0">
             <h3 class="case-title">Workshop Anchor</h3>
             <p class="case-desc">Keep your team's design decisions grounded in evidence.</p>
-            <p class="case-reveal">Generate a stream of ideas while staying grounded in behavioral science.</p>
+            <p class="case-reveal">Brainstorm freely, with the science built in.</p>
             <img class="case-media" src="assets/case-card-workshop-anchor.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" />
           </li>
           <li class="case-card" tabindex="0">
             <h3 class="case-title">The Kickoff</h3>
             <p class="case-desc">Start a new project with a shared, evidence-based footing.</p>
-            <p class="case-reveal">Amass research and evidence-based intervention concepts that address the behavior change challenges you face.</p>
+            <p class="case-reveal">Begin with research, not guesswork.</p>
             <img class="case-media" src="assets/case-card-the-kickoff.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" />
           </li>
         </ul>
